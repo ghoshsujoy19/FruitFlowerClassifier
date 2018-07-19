@@ -1,18 +1,3 @@
-/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
 package com.example.sujoy.flowerrecogniser;
 
 import android.content.res.AssetManager;
@@ -28,7 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Vector;
-import org.tensorflow.Operation;
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 /** A classifier specialized to label images using TensorFlow. */
@@ -112,15 +96,6 @@ public class TensorFlowImageClassifier implements Classifier {
     }
 
     c.inferenceInterface = new TensorFlowInferenceInterface(assetManager, modelFilename);
-
-    // The shape of the output is [N, NUM_CLASSES], where N is the batch size.
-    final Operation operation = c.inferenceInterface.graphOperation(outputName);
-//    final int numClasses = (int) operation.output(0).shape().size(1);
-    Log.i(TAG, "Read " + c.labels.size() + " labels, output layer size is " + numClasses);
-
-    // Ideally, inputSize could have been retrieved from the shape of the input operation.  Alas,
-    // the placeholder node for input in the graphdef typically used does not specify a shape, so it
-    // must be passed in as a parameter.
     c.inputSize = inputSize;
     c.imageMean = imageMean;
     c.imageStd = imageStd;
@@ -145,7 +120,7 @@ public class TensorFlowImageClassifier implements Classifier {
     bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
     for (int i = 0; i < intValues.length; ++i) {
       final int val = intValues[i];
-      floatValues[i * 3 + 0] = (((val >> 16) & 0xFF) - imageMean) / imageStd;
+      floatValues[i * 3] = (((val >> 16) & 0xFF) - imageMean) / imageStd;
       floatValues[i * 3 + 1] = (((val >> 8) & 0xFF) - imageMean) / imageStd;
       floatValues[i * 3 + 2] = ((val & 0xFF) - imageMean) / imageStd;
     }

@@ -1,19 +1,3 @@
-/*
- * Copyright 2016 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.sujoy.flowerrecogniser;
 
 import android.app.Activity;
@@ -334,11 +318,6 @@ public class CameraConnectionFragment extends Fragment {
   public void onResume() {
     super.onResume();
     startBackgroundThread();
-
-    // When the screen is turned off and turned back on, the SurfaceTexture is already
-    // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
-    // a camera and start preview from here (otherwise, we wait until the surface is ready in
-    // the SurfaceTextureListener).
     if (textureView.isAvailable()) {
       openCamera(textureView.getWidth(), textureView.getHeight());
     } else {
@@ -376,10 +355,6 @@ public class CameraConnectionFragment extends Fragment {
               new CompareSizesByArea());
 
       sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
-
-      // Danger, W.R.! Attempting to use too large a preview size could  exceed the camera
-      // bus' bandwidth limitation, resulting in gorgeous previews but the storage of
-      // garbage capture data.
       previewSize =
           chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
               inputSize.getWidth(),
